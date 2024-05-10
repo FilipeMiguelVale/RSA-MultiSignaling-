@@ -14,7 +14,20 @@ services:
 #        networks:
 #            vanetzalan0:
 #                ipv4_address: 192.168.98.254
-      
+    api:
+        build:
+            context: ./api
+            dockerfile: Dockerfile
+        depends_on:
+            - rsu
+            - obu
+        container_name: "api"
+        ports:
+            - "8080:8000"
+        networks:
+            vanetzalan0:
+                ipv4_address: 192.168.98.254
+
     rsu:
         hostname: rsu
         restart: always
@@ -36,7 +49,7 @@ services:
             vanetzalan0:
                 ipv4_address: 192.168.98.10
         volumes:
-            - ./tools/socktap/config.ini:/config.ini
+            - ./vanetza-master/tools/socktap/config.ini:/config.ini
 
 
     obu:
@@ -60,7 +73,7 @@ services:
             vanetzalan0:
                 ipv4_address: 192.168.98.20
         volumes:
-            - ./tools/socktap/config.ini:/config.ini
+            - ./vanetza-master/tools/socktap/config.ini:/config.ini
 
 networks:
   vanetzalan0:
