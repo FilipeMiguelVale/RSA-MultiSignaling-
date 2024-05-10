@@ -29,8 +29,8 @@ services:
             - START_EMBEDDED_MOSQUITTO=true
             - SUPPORT_MAC_BLOCKING=true
             - VANETZA_USE_HARDCODED_GPS=true
-            - VANETZA_LATITUDE=40
-            - VANETZA_LONGITUDE=-8
+            - VANETZA_LATITUDE=40.642678
+            - VANETZA_LONGITUDE=-8.648147
             - VANETZA_CAM_PERIODICITY=1000
         networks:
             vanetzalan0:
@@ -53,8 +53,8 @@ services:
             - START_EMBEDDED_MOSQUITTO=true
             - SUPPORT_MAC_BLOCKING=true
             - VANETZA_USE_HARDCODED_GPS=true
-            - VANETZA_LATITUDE=40
-            - VANETZA_LONGITUDE=0
+            - VANETZA_LATITUDE=40.641754
+            - VANETZA_LONGITUDE=-8.652605
             - VANETZA_CAM_PERIODICITY=1000
         networks:
             vanetzalan0:
