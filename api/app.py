@@ -1,7 +1,6 @@
 import json
 
 from fastapi import FastAPI, File, UploadFile, HTTPException, Query, Request
-from routers import register
 from fastapi.templating import Jinja2Templates
 
 import paho.mqtt.client as mqtt
