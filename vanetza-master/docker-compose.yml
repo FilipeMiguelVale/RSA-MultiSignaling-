@@ -1,5 +1,20 @@
 version: '2.4'
 services:
+#    influxdb:
+#        image: influxdb:latest
+#        restart: unless-stopped
+#        environment:
+#          - INFLUXDB_USER=influxdbuser
+#          - INFLUXDB_PASSWORD=influxdbpassword
+#          - INFLUXDB_DATABASE=mqtt_data
+#        volumes:
+#          - influxdb-data:/var/lib/influxdb2
+#        ports:
+#          - "8086:8086"
+#        networks:
+#            vanetzalan0:
+#                ipv4_address: 192.168.98.254
+      
     rsu:
         hostname: rsu
         restart: always
@@ -13,9 +28,16 @@ services:
             - VANETZA_INTERFACE=br0
             - START_EMBEDDED_MOSQUITTO=true
             - SUPPORT_MAC_BLOCKING=true
+            - VANETZA_USE_HARDCODED_GPS=true
+            - VANETZA_LATITUDE=40
+            - VANETZA_LONGITUDE=-8
+            - VANETZA_CAM_PERIODICITY=1000
         networks:
             vanetzalan0:
                 ipv4_address: 192.168.98.10
+        volumes:
+            - ./tools/socktap/config.ini:/config.ini
+
 
     obu:
         hostname: obu
@@ -30,10 +52,19 @@ services:
             - VANETZA_INTERFACE=br0
             - START_EMBEDDED_MOSQUITTO=true
             - SUPPORT_MAC_BLOCKING=true
+            - VANETZA_USE_HARDCODED_GPS=true
+            - VANETZA_LATITUDE=40
+            - VANETZA_LONGITUDE=0
+            - VANETZA_CAM_PERIODICITY=1000
         networks:
             vanetzalan0:
                 ipv4_address: 192.168.98.20
-            
+        volumes:
+            - ./tools/socktap/config.ini:/config.ini
+
 networks:
   vanetzalan0:
     external: true
+
+volumes:
+  influxdb-data:
