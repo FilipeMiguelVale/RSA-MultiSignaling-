@@ -1,94 +1,46 @@
 import React from 'react';
-import { MapContainer, TileLayer, Circle, Rectangle } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
+// Import the car icon image, make sure the path is correct based on your project structure
+import carIconUrl from './icons/car.png';
+import trafficLightIconUrl from './icons/traffic-light.png';  // Adjust the path as necessary
+
+
+// Create the custom Leaflet icon
+const carIcon = new L.Icon({
+    iconUrl: carIconUrl,
+    iconSize: [40, 40], // Size of the icon in pixels
+    iconAnchor: [20, 20], // Point of the icon which will correspond to marker's location
+    popupAnchor: [0, -20] // Point from which the popup should open relative to the iconAnchor
+});
+
+const trafficLightIcon = new L.Icon({
+    iconUrl: trafficLightIconUrl,
+    iconSize: [30, 30], // Size of the icon in pixels, adjust as needed
+    iconAnchor: [15, 30], // Point of the icon which will correspond to marker's location
+    popupAnchor: [0, -30] // Point from which the popup should open relative to the iconAnchor
+});
 
 const MapComponent = () => {
-    const circles = [
-        { id: 1, position: [40.632696, -8.648598], radius: 5, color: "green" },
-        { id: 2, position: [51.515, -0.1], radius: 200, color: "green" },
+    const markers = [
+        { id: 1, position: [40.641754, -8.652605], icon: carIcon },
+        { id: 2, position: [40.642678, -8.648147], icon: trafficLightIcon },  // Example position
     ];
 
-    const rectangles = [{
-            id: 1,
-            bounds: [
-                [40.631902, -8.650508],
-                [40.632696, -8.648598]
-            ],
-            color: "red"
-        },
-        {
-            id: 2,
-            bounds: [
-                [40.631499, -8.651631],
-                [40.6426918, -8.648598]
-            ],
-            color: "red"
-        },
-        // New rectangles added below
-        // {
-        //     id: 3,
-        //     bounds: [
-        //         [40.633, -8.649],
-        //         [40.634, -8.647]
-        //     ],
-        //     color: "blue" // Change the color if needed
-        // },
-        // {
-        //     id: 4,
-        //     bounds: [
-        //         [40.635, -8.646],
-        //         [40.636, -8.644]
-        //     ],
-        //     color: "blue" // Change the color if needed
-        // },
-        // {
-        //     id: 5,
-        //     bounds: [
-        //         [40.637, -8.643],
-        //         [40.638, -8.641]
-        //     ],
-        //     color: "blue" // Change the color if needed
-        // },
-    ];
-
-    const createSmallerBounds = (bounds, shrinkFactor = 0.0002) => {
-        const [sw, ne] = bounds;
-        const center = [(sw[0] + ne[0]) / 2, (sw[1] + ne[1]) / 2];
-        return [
-            [center[0] - shrinkFactor, center[1] - shrinkFactor],
-            [center[0] + shrinkFactor, center[1] + shrinkFactor]
-        ];
-    };
-
-    return ( <
-        MapContainer center = {
-            [40.632696, -8.648598]
-        }
-        zoom = { 70 }
-        style = {
-            { height: '100vh', width: '100%' }
-        } >
-        <
-        TileLayer url = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" / > {
-            circles.map(circle => ( <
-                Circle key = { circle.id }
-                center = { circle.position }
-                radius = { circle.radius }
-                color = { circle.color }
+    return (
+        <MapContainer center={[40.642678, -8.648147]} zoom={30} style={{ height: '100vh', width: '100%' }}>
+            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            {markers.map(marker => (
+                <Marker
+                    key={marker.id}
+                    position={marker.position}
+                    icon={marker.icon}
                 />
-            ))
-        } {
-            rectangles.map(rectangle => ( <
-                Rectangle key = { rectangle.id }
-                bounds = { createSmallerBounds(rectangle.bounds) }
-                color = { rectangle.color }
-                />
-            ))
-        } <
-        /MapContainer>
+            ))}
+        </MapContainer>
     );
 };
 
-
-export default MapComponent
+export default MapComponent;

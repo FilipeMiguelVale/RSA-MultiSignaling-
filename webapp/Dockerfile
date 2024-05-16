@@ -1,5 +1,5 @@
-# Use an official Node runtime as a parent image
-FROM node:16
+# Use an official Node.js runtime as a parent image
+FROM node:16-alpine
 
 # Set the working directory in the container
 WORKDIR /usr/src/app
@@ -9,21 +9,20 @@ COPY package*.json ./
 # Alternatively, if you use Yarn, copy yarn.lock as well
 # COPY package.json yarn.lock ./
 
-# Install any dependencies
+# Install any dependencies, including those necessary for building the app
 RUN npm install
 # Or use yarn
 # RUN yarn install
 
-# Bundle app source inside Docker image
+# Copy the rest of your application's code
 COPY . .
 
-# Build your app
+# Build your React app
 RUN npm run build
 
-# Install serve to serve your app
+# Serve the application using serve package for demonstration purposes
+# For production, consider using Nginx or another web server
 RUN npm install -g serve
-
-# Command to run your app
 CMD ["serve", "-s", "build", "-l", "3000"]
 
 # Expose the port the app runs on
