@@ -75,9 +75,16 @@ services:
         volumes:
             - ./vanetza-master/tools/socktap/config.ini:/config.ini
 
+
+    
+
+    
+
+
 networks:
   vanetzalan0:
     external: true
 
-volumes:
-  influxdb-data:
+# volumes:
+#   influxdb-data:volumes:
+#   influxdb-data:
