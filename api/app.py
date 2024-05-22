@@ -69,8 +69,9 @@ def get_mqtt_data():
     """
 
     global OBUS
-    # print(OBUS)
-    return OBUS, 200
+    print(OBUS)
+    print(type(OBUS))
+    return OBUS
 
 for broker in mqtt_brokers:
 #connect to obu

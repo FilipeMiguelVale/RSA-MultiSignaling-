@@ -19,10 +19,11 @@ const MapComponent = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:8080/data');
-                const data = await response.json();
-                console.log(data);
-                console.log(data[0]);
+                const response =await fetch("http://192.168.98.254:8000/data",{mode: 'no-cors', method: 'get',
+   headers: {'Content-Type':'application/json'}});
+                const data = await response.json()
+                console.log("dg");
+                console.log(data)
                 console.log("--------------------");
                 const positions = {};
                 data.forEach((item) => {
