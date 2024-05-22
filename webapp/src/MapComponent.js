@@ -1,43 +1,54 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Import the car icon image, make sure the path is correct based on your project structure
+// Import the car icon image
 import carIconUrl from './icons/car.png';
-import trafficLightIconUrl from './icons/traffic-light.png';  // Adjust the path as necessary
 
-
-// Create the custom Leaflet icon
+// Define the Leaflet icon for the car
 const carIcon = new L.Icon({
     iconUrl: carIconUrl,
     iconSize: [40, 40], // Size of the icon in pixels
     iconAnchor: [20, 20], // Point of the icon which will correspond to marker's location
-    popupAnchor: [0, -20] // Point from which the popup should open relative to the iconAnchor
-});
-
-const trafficLightIcon = new L.Icon({
-    iconUrl: trafficLightIconUrl,
-    iconSize: [30, 30], // Size of the icon in pixels, adjust as needed
-    iconAnchor: [15, 30], // Point of the icon which will correspond to marker's location
-    popupAnchor: [0, -30] // Point from which the popup should open relative to the iconAnchor
+    popupAnchor: [0, -20]
 });
 
 const MapComponent = () => {
-    const markers = [
-        { id: 1, position: [40.641754, -8.652605], icon: carIcon },
-        { id: 2, position: [40.642678, -8.648147], icon: trafficLightIcon },  // Example position
-    ];
+    const [carPositions, setCarPositions] = useState({});
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch('http://localhost:8080/data');
+                const data = await response.json();
+                console.log(data);
+                console.log(data[0]);
+                console.log("--------------------");
+                const positions = {};
+                data.forEach((item) => {
+                    const carId = Object.keys(item)[0];
+                    positions[carId] = {
+                        lat: item[carId].latitude,
+                        lng: item[carId].longitude,
+                        speed: item[carId].speed
+                    };
+                });
+                setCarPositions(positions);
+            } catch (error) {
+                console.error('Failed to fetch data:', error);
+            }
+        };
+
+        const intervalId = setInterval(fetchData, 5000); // Fetch data every 5 seconds
+
+        return () => clearInterval(intervalId); // Cleanup interval on component unmount
+    }, []);
 
     return (
-        <MapContainer center={[40.642678, -8.648147]} zoom={30} style={{ height: '100vh', width: '100%' }}>
+        <MapContainer center={[40.641754, -8.652605]} zoom={73} style={{ height: '100vh', width: '100%' }}>
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            {markers.map(marker => (
-                <Marker
-                    key={marker.id}
-                    position={marker.position}
-                    icon={marker.icon}
-                />
+            {Object.entries(carPositions).map(([id, position]) => (
+                <Marker key={id} position={[position.lat, position.lng]} icon={carIcon} />
             ))}
         </MapContainer>
     );
