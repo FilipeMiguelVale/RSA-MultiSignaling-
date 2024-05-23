@@ -19,12 +19,9 @@ const MapComponent = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response =await fetch("http://192.168.98.254:8000/data",{mode: 'no-cors', method: 'get',
-   headers: {'Content-Type':'application/json'}});
-                const data = await response.json()
-                console.log("dg");
+                const response = await fetch("/data");
+                const data = await response.json();
                 console.log(data)
-                console.log("--------------------");
                 const positions = {};
                 data.forEach((item) => {
                     const carId = Object.keys(item)[0];

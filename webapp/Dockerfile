@@ -22,8 +22,8 @@ RUN npm run build
 
 # Serve the application using serve package for demonstration purposes
 # For production, consider using Nginx or another web server
-RUN npm install -g serve
-CMD ["serve", "-s", "build", "-l", "3000"]
-
+#RUN npm install -g serve
+#CMD ["serve", "-s", "build", "-l", "3000"]
+CMD ["npm", "start"]
 # Expose the port the app runs on
 EXPOSE 3000

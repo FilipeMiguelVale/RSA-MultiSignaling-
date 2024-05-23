@@ -25,8 +25,7 @@ Notification API helps you do awesome stuff. 🚀
 app = FastAPI(title="Notification API",
     description=description,
     summary="Deadpool's favorite app. Nuff said.",
-    version="1.0.1",
-    root_path="/api/v1")
+    version="1.0.1")
 
 mqtt_brokers = [
     {"broker": "192.168.98.20", "port": 1883, "topic": "vanetza/in/cam"},
@@ -62,11 +61,8 @@ def on_messageObu1(client, userdata, msg):
         OBUS[obu_id]["speed"] = speed
 
 
-@app.get("/data")
-def get_mqtt_data():
-    """
-    Endpoint GET para ler informações de vários clusters MQTT.
-    """
+@app.get("/data", status_code=200)
+async def get_mqtt_data():
 
     global OBUS
     print(OBUS)
