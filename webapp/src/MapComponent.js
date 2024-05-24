@@ -1,55 +1,89 @@
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker } from 'react-leaflet';
-import L from 'leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import './MapComponent.css';
+import L from 'leaflet';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Toggle from 'react-toggle';
+import "react-toggle/style.css";
 
-// Import the car icon image
-import carIconUrl from './icons/car.png';
+const CustomToast = ({ content, description }) => (
+  <div>
+    <div>{content}</div>
+    <h5>{description}</h5>
+  </div>
+);
 
-// Define the Leaflet icon for the car
-const carIcon = new L.Icon({
-    iconUrl: carIconUrl,
-    iconSize: [40, 40], // Size of the icon in pixels
-    iconAnchor: [20, 20], // Point of the icon which will correspond to marker's location
-    popupAnchor: [0, -20]
-});
+function MapComponent() {
+  const [obuData, setObuData] = useState([]);
+  const [rsuData, setRsuData] = useState([]);
+  const [showHighwayInfo, setShowHighwayInfo] = useState(true);
 
-const MapComponent = () => {
-    const [carPositions, setCarPositions] = useState({});
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch("/data");
-                const data = await response.json();
-                console.log(data)
-                const positions = {};
-                data.forEach((item) => {
-                    const carId = Object.keys(item)[0];
-                    positions[carId] = {
-                        lat: item[carId].latitude,
-                        lng: item[carId].longitude,
-                        speed: item[carId].speed
-                    };
-                });
-                setCarPositions(positions);
-            } catch (error) {
-                console.error('Failed to fetch data:', error);
-            }
-        };
+  useEffect(() => {
+    const fetchAndUpdateData = async () => {
+      try {
+        const response = await fetch('/data');
+        const data = await response.json();
+        const obuEntries = [];
+        const rsuEntries = [];
 
-        const intervalId = setInterval(fetchData, 5000); // Fetch data every 5 seconds
+        Object.keys(data).forEach(key => {
+          if (key.startsWith('OBU')) { // Assuming OBU data keys start with 'OBU'
+            obuEntries.push({
+              id: key,
+              ...data[key]
+            });
+          } else { // Assuming RSU data keys do not start with 'OBU'
+            rsuEntries.push({
+              id: key,
+              ...data[key]
+            });
+          }
+        });
 
-        return () => clearInterval(intervalId); // Cleanup interval on component unmount
-    }, []);
+        setObuData(obuEntries);
+        setRsuData(rsuEntries);
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+      }
+    };
 
-    return (
-        <MapContainer center={[40.641754, -8.652605]} zoom={73} style={{ height: '100vh', width: '100%' }}>
-            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            {Object.entries(carPositions).map(([id, position]) => (
-                <Marker key={id} position={[position.lat, position.lng]} icon={carIcon} />
-            ))}
-        </MapContainer>
-    );
-};
+    const interval = setInterval(fetchAndUpdateData, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const carIcon = new L.Icon({
+    iconUrl: require('./icons/car.png'),
+    iconSize: new L.Point(50, 50),
+    className: 'car-icon'
+  });
+
+  return (
+    <div className='container'>
+      {/* <Toggle defaultChecked={showHighwayInfo} onChange={() => setShowHighwayInfo(!showHighwayInfo)} /> */}
+      <MapContainer center={[40.641754, -8.652605]} zoom={17.5} style={{ height: "100%", width: "100%"}} scrollWheelZoom={false}>
+        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        {obuData.map((obu, index) => (
+          <Marker key={index} position={[obu.latitude, obu.longitude]} icon={carIcon}>
+            <Popup>
+              Speed: {obu.speed} km/h
+              ID: {obu.id}
+            </Popup>
+          </Marker>
+        ))}
+        {rsuData.map((rsu, index) => (
+          <Marker key={index} position={[rsu.latitude, rsu.longitude]} icon={carIcon}>
+            <Popup>
+              Speed: {rsu.speed} km/h
+              ID: {rsu.id}
+            </Popup>
+          </Marker>
+        ))}
+      </MapContainer>
+      <ToastContainer newestOnTop />
+    </div>
+  );
+}
 
 export default MapComponent;
