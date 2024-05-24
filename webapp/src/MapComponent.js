@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import './MapComponent.css';
 import L from 'leaflet';
@@ -8,17 +8,17 @@ import 'react-toastify/dist/ReactToastify.css';
 import Toggle from 'react-toggle';
 import "react-toggle/style.css";
 
-const CustomToast = ({ content, description }) => (
-  <div>
-    <div>{content}</div>
-    <h5>{description}</h5>
-  </div>
-);
+// const CustomToast = ({ content, description }) => (
+//   <div>
+//     <div>{content}</div>
+//     <h5>{description}</h5>
+//   </div>
+// );
 
 function MapComponent() {
   const [obuData, setObuData] = useState([]);
   const [rsuData, setRsuData] = useState([]);
-  const [showHighwayInfo, setShowHighwayInfo] = useState(true);
+  // const [showHighwayInfo, setShowHighwayInfo] = useState(true);
 
   useEffect(() => {
     const fetchAndUpdateData = async () => {
@@ -49,7 +49,7 @@ function MapComponent() {
       }
     };
 
-    const interval = setInterval(fetchAndUpdateData, 1000);
+    const interval = setInterval(fetchAndUpdateData, 500);
     return () => clearInterval(interval);
   }, []);
 

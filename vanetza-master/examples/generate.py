@@ -6,7 +6,7 @@ import math
 
 current_latitude = 80.0   # latitude em graus decimais
 current_longitude = 0.0   # longitude em graus decimais
-VELOCITY_X=50/3.6         # velocidade horizontal em m/s
+VELOCITY_X=5/3.6         # velocidade horizontal em m/s
 VELOCITY_Y=0/3.6         # velocidade VERTICAL em m/s
 TIME = 0.5               # intervalo de tempo em segundos
 def on_connect(client, userdata, flags, rc):
