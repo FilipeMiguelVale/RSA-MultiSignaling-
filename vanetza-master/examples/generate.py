@@ -161,7 +161,7 @@ def generate():
 client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
-client.connect(os.getenv("OBU_MQTT_IP"), os.getenv("OBU_MQTT_PORT"), 60)
+client.connect(os.getenv("OBU_MQTT_IP"), int(os.getenv("OBU_MQTT_PORT")), 60)
 
 threading.Thread(target=client.loop_forever).start()
 
