@@ -11,7 +11,7 @@ function MapComponent() {
 
   // Static traffic light positions
   const trafficLights = [
-    { id: 'tl1', latitude: 40.642808, longitude: -8.648206 },
+    { id: 'tl1', latitude: 40.642808, longitude: -8.648206 }, 
     { id: 'tl2', latitude: 40.642643, longitude: -8.648292 },
     { id: 'tl3', latitude: 40.642554, longitude: -8.648119 },
     { id: 'tl4', latitude: 40.642714, longitude: -8.647976 },
@@ -21,24 +21,23 @@ function MapComponent() {
     { id: 'tl8', latitude: 40.643103, longitude: -8.646651 }
   ];
 
-  // Static numbers positions
   const numberPositions = [
-    { id: 'n1', position: [40.64246735129016, -8.6485201216305], number: '0' },
-    { id: 'n1', position: [40.642399899557034, -8.648201329699718], number: '1' },
-    { id: 'n1', position: [40.64244641800096, -8.647897864304072], number: '2' },
-    { id: 'n1', position: [40.64264877285484, -8.647677162198146], number: '3' },
-    { id: 'n1', position: [40.64280693484221, -8.646812745616604], number: '3' },
-    { id: 'n1', position: [40.64268366156104, -8.646717720913703], number: '4' },
-    { id: 'n1', position: [40.64273948345254, -8.646346818763465], number: '5' },
-    { id: 'n1', position: [40.64295114103379, -8.646009634990524], number: '6' },
-    { id: 'n1', position: [40.64326400557164, -8.646167127935588], number: '7' },
-    { id: 'n1', position: [40.643261384867486, -8.646536688850805], number: '8' },
-    { id: 'n1', position: [40.64316179803358, -8.64696151121129], number: '9' },
-    { id: 'n1', position: [40.64307269389833, -8.647044403379189], number: '10' },
-    { id: 'n1', position: [40.64289710598954, -8.64789404810016], number: '10' },
-    { id: 'n1', position: [40.64298358963856, -8.64810818633413], number: '11' },
-    { id: 'n1', position: [40.64284731231383, -8.648360316678158], number: '12' },
-    { id: 'n1', position: [40.642703172532975, -8.648684977669097], number: '13' },
+    { id: 'n1', position: [40.642560, -8.648328], number: '0' },
+    { id: 'n1', position: [40.642529, -8.648125], number: '1' },
+    { id: 'n1', position: [40.642548, -8.648060], number: '2' },
+    { id: 'n1', position: [40.642619, -8.647964], number: '3' },
+    { id: 'n1', position: [40.642865, -8.646714], number: '3' },
+    { id: 'n1', position: [40.642829, -8.646633], number: '4' },
+    { id: 'n1', position: [40.642867, -8.646505], number: '5' },
+    { id: 'n1', position: [40.642914, -8.646424], number: '6' },
+    { id: 'n1', position: [40.643128, -8.646467], number: '7' },
+    { id: 'n1', position: [40.643134, -8.646628], number: '8' },
+    { id: 'n1', position: [40.643118, -8.646700], number: '9' },
+    { id: 'n1', position: [40.643063, -8.646783], number: '10' },
+    { id: 'n1', position: [40.642812, -8.647993], number: '10' },
+    { id: 'n1', position: [40.642843, -8.648168], number: '11' },
+    { id: 'n1', position: [40.642818, -8.648237], number: '12' },
+    { id: 'n1', position: [40.642713, -8.648449], number: '13' },
     //{ id: 'n2', latitude: 40.642850, longitude: -8.648600, number: '2' },
     // Additional numbers...
   ];
@@ -76,17 +75,17 @@ function MapComponent() {
 
   const createNumberIcon = (number) => {
     return new L.divIcon({
-      html: <div style="background-color: rgba(255, 255, 255, 0.8); border-radius: 50%; border: 2px solid black; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold;">${number}</div>,
+      html: `<div style="background-color: rgba(255, 255, 255, 0.8); border-radius: 50%; border: 2px solid black; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold;">${number}</div>`,
       className: '',  // No additional classes needed
-      iconSize: [15, 1],
-      iconAnchor: [12, 12]  // Centers the icon
+      iconSize: [8, 1],
+      iconAnchor: [4, 4]  // Centers the icon
     });
   };
 
   return (
     <div className='container'>
-      <MapContainer center={[40.64264002592938, -8.648293544440508]} zoom={17.5} style={{ height: "100%", width: "100%"}} scrollWheelZoom={false}>
-        <TileLayer url="https://api.mapbox.com/styles/v1/jp-amaral/cl758vsmy000714o2rx0w0779/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoianAtYW1hcmFsIiwiYSI6ImNsNzU4c3g1MzExMHozbm1hdWlvbnRrbmoifQ.SpZQvOQyQCwhNZluPGPXQg" />
+      <MapContainer center={[40.64264002592938, -8.648293544440508]} zoom={70} style={{ height: "100%", width: "100%"}} scrollWheelZoom={true}>
+        <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png" />
         {carData.map(car => (
           <Marker key={car.id} position={[car.latitude, car.longitude]} icon={carIcon}>
             <Popup>
@@ -103,7 +102,7 @@ function MapComponent() {
           </Marker>
         ))}
         {numberPositions.map(pos => (
-          <Marker key={pos.id} position={pos.position} icon={createNumberIcon(pos.number)}>
+         <Marker key={pos.id} position={pos.position} icon={createNumberIcon(pos.number)}>
             <Popup>
               Number: {pos.number}
             </Popup>
