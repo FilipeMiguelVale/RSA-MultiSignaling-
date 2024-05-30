@@ -14,7 +14,7 @@ speed = 60/3.6  #km /3.6 = m/s
 TIME = 0.4 #seconds
 current_bearing = 0
 index = 0
-intention = list(os.getenv("INTENT"))
+intention = json.loads(os.getenv("INTENT"))
 print(intention)
 print(type(intention))
 #intention = [0,1,2,11,12,13]

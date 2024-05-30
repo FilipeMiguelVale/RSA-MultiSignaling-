@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 # Alternatively, if you use Yarn, copy yarn.lock as well
 # COPY package.json yarn.lock ./
-
+COPY --chown=node:node package.json .
 # Install any dependencies, including those necessary for building the app
 RUN npm install
 # Or use yarn
@@ -20,6 +20,8 @@ COPY . .
 # Build your React app
 RUN npm run build
 
+COPY --chown=node:node . .
+USER node
 # Serve the application using serve package for demonstration purposes
 # For production, consider using Nginx or another web server
 #RUN npm install -g serve
