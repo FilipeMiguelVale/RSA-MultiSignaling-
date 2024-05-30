@@ -2,15 +2,15 @@
 FROM node:16-alpine
 
 # Set the working directory in the container
-WORKDIR /app
-
+WORKDIR /usr/src/app
+ENV PATH /usr/src/app/node_modules/.bin:$PATH
 # Copy package.json and package-lock.json (or yarn.lock)
 COPY package*.json ./
 # Alternatively, if you use Yarn, copy yarn.lock as well
 # COPY package.json yarn.lock ./
 
 # Install any dependencies, including those necessary for building the app
-RUN npm install
+RUN npm install --silent
 # Or use yarn
 # RUN yarn install
 
