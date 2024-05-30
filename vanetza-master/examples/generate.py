@@ -15,7 +15,8 @@ TIME = 0.4 #seconds
 current_bearing = 0
 index = 0
 intention = list(os.getenv("INTENT"))
-
+print(intention)
+print(type(intention))
 #intention = [0,1,2,11,12,13]
 dataset = 0
 first = True
