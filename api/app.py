@@ -13,6 +13,7 @@ POSTS_status = {}
 ORDERING_INTENSITIES = {}
 
 OBUS = {}
+RSUS = {}
 
 description = """
 Notification API helps you do awesome stuff. 🚀
@@ -27,31 +28,56 @@ app = FastAPI(title="Notification API",
     summary="Deadpool's favorite app. Nuff said.",
     version="1.0.1")
 
-mqtt_brokers = [
-    {"broker": "192.168.98.20", "port": 1883, "topic": "vanetza/in/cam"},
+obu_mqtt_brokers = [
     {"broker": "192.168.98.10", "port": 1883, "topic": "vanetza/in/cam"},
-    {"broker": "192.168.98.40", "port": 1883, "topic": "vanetza/in/cam"},
+    {"broker": "192.168.98.20", "port": 1883, "topic": "vanetza/in/cam"},
+
     # ...
 ]
-mqtt_broker = "192.168.98.20"
-mqtt_port = 1883
-mqtt_topic = "vanetza/in/cam"
 
-global last_message
+rsu_mqtt_brokers = [
+    {"broker": "192.168.98.100", "port": 1883, "topic": "vanetza/in/spatem"},
+]
 
-def on_connectObu1(client, userdata, flags, rc):
+
+
+def on_connectObu1(client, userdata, flags, rc, properties):
     print("Connected to cams with result code "+str(rc))
     client.subscribe("vanetza/out/cam")
 
+def on_connectRSU(client, userdata, flags, rc, properties):
+    print("Connected to rsu with result code "+str(rc))
+    client.subscribe("vanetza/out/spatem")
+
+
+def on_messageRSU(client, userdata, msg):
+    global rsu_MESSAGE, RSUS
+    # print(colored("CAM message", "green"))
+    message = json.loads(msg.payload)
+    rsu_MESSAGE = msg.payload
+    print("\n\n")
+    print(message)
+    print("\n\n")
+
+    stationID = message["stationID"]
+    if(stationID not in RSUS):
+        r = {}
+        for i, group in enumerate(message["fields"]["spat"]["intersections"][0]["states"]):
+            r[i]={"state": group["state-time-speed"][0]["eventState"]}
+        RSUS[stationID] = r#message["fields"]["spat"]["intersections"][0]["states"][0]
+        return
+    else:
+        pass
+
 def on_messageObu1(client, userdata, msg):
     global OBU_MESSAGE, OBUS
-    # print(colored("CAM message", "green"))
+    #print(colored("CAM message", "green"))
     message = json.loads(msg.payload)
     OBU_MESSAGE = msg.payload
     longitude = message["longitude"]
     latitude = message["latitude"]
     speed = message["speed"]
-    obu_id = message["stationID"]
+    obu_id = message["receiverID"]
 
     if(obu_id not in OBUS):
         OBUS[obu_id] = {"longitude": longitude, "latitude": latitude, "speed": speed}
@@ -66,15 +92,31 @@ def on_messageObu1(client, userdata, msg):
 async def get_mqtt_data():
 
     global OBUS
-    print(OBUS)
-    print(type(OBUS))
     return OBUS
 
-for broker in mqtt_brokers:
-#connect to obu
-    clientOBUS = mqtt.Client()
+@app.get("/dataRSU", status_code=200)
+async def get_mqtt_dataRSU():
+
+    global RSUS
+    print(RSUS)
+    return RSUS
+
+for broker in obu_mqtt_brokers:
+
+    clientOBUS = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
     clientOBUS.on_connect = on_connectObu1
     clientOBUS.on_message = on_messageObu1
     clientOBUS.connect(broker["broker"],broker["port"], 60)
 
     threading.Thread(target=clientOBUS.loop_forever).start()
+
+for broker in obu_mqtt_brokers:
+
+    clientRSU = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+    clientRSU.on_connect = on_connectRSU
+    clientRSU.on_message = on_messageRSU
+    clientRSU.connect(broker["broker"],broker["port"], 60)
+
+    threading.Thread(target=clientRSU.loop_forever).start()
+
+

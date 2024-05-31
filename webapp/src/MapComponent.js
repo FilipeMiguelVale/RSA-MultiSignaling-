@@ -22,29 +22,30 @@ function MapComponent() {
   ];
 
   const numberPositions = [
-    { id: 'n1', position: [40.642560, -8.648328], number: '0' },
-    { id: 'n1', position: [40.642529, -8.648125], number: '1' },
-    { id: 'n1', position: [40.642548, -8.648060], number: '2' },
-    { id: 'n1', position: [40.642619, -8.647964], number: '3' },
-    { id: 'n1', position: [40.642865, -8.646714], number: '3' },
-    { id: 'n1', position: [40.642829, -8.646633], number: '4' },
-    { id: 'n1', position: [40.642867, -8.646505], number: '5' },
-    { id: 'n1', position: [40.642914, -8.646424], number: '6' },
-    { id: 'n1', position: [40.643128, -8.646467], number: '7' },
-    { id: 'n1', position: [40.643134, -8.646628], number: '8' },
-    { id: 'n1', position: [40.643118, -8.646700], number: '9' },
-    { id: 'n1', position: [40.643063, -8.646783], number: '10' },
-    { id: 'n1', position: [40.642812, -8.647993], number: '10' },
-    { id: 'n1', position: [40.642843, -8.648168], number: '11' },
-    { id: 'n1', position: [40.642818, -8.648237], number: '12' },
-    { id: 'n1', position: [40.642713, -8.648449], number: '13' },
+    { id: 'n1', position: [40.642558, -8.648344], number: '0' },
+    { id: 'n1', position: [40.642502, -8.648184], number: '1' },
+    { id: 'n1', position: [40.642536, -8.648020], number: '2' },
+    { id: 'n1', position: [40.642671, -8.647877], number: '3' },
+    { id: 'n1', position: [40.642835, -8.646730], number: '3' },
+    { id: 'n1', position: [40.642810, -8.646621], number: '4' },
+    { id: 'n1', position: [40.642833, -8.646517], number: '5' },
+    { id: 'n1', position: [40.642938, -8.646439], number: '6' },
+    { id: 'n1', position: [40.643159, -8.646472], number: '7' },
+    { id: 'n1', position: [40.643280, -8.646697], number: '8' },
+    { id: 'n1', position: [40.643301, -8.646769], number: '9' },
+    { id: 'n1', position: [40.643076, -8.646816], number: '10' },
+    { id: 'n1', position: [40.642846, -8.648004], number: '10' },
+    { id: 'n1', position: [40.642960, -8.648177], number: '11' },
+    { id: 'n1', position: [40.642927, -8.648340], number: '12' },
+    { id: 'n1', position: [40.642773, -8.648412], number: '13' },
     //{ id: 'n2', latitude: 40.642850, longitude: -8.648600, number: '2' },
     // Additional numbers...
   ];
 
   useEffect(() => {
-    const fetchAndUpdateData = async () => {
+    const fetchData = async () => {
       try {
+        // Fetch data from the original endpoint
         const response = await fetch('/data');
         const data = await response.json();
         const carEntries = Object.keys(data).map(key => ({
@@ -52,14 +53,22 @@ function MapComponent() {
           ...data[key]
         }));
         setCarData(carEntries);
+
+        // Fetch additional data from another endpoint
+        // const additionalResponse = await fetch('/dataRSU');
+        // const additionalData = await additionalResponse.json();
+        // // Process and update your state or combine it with existing data
+        // //...
+        // setCarData(prevData => [...prevData, ...additionalData]);
       } catch (error) {
         console.error('Failed to fetch data:', error);
       }
     };
 
-    const interval = setInterval(fetchAndUpdateData, 500);
+    const interval = setInterval(fetchData, 500);
     return () => clearInterval(interval);
   }, []);
+
 
   const carIcon = new L.Icon({
     iconUrl: require('./icons/car.png'),
@@ -69,13 +78,13 @@ function MapComponent() {
 
   const trafficLightIcon = new L.Icon({
     iconUrl: require('./icons/traffic-light.png'),
-    iconSize: new L.Point(20, 20),
+    iconSize: new L.Point(30, 30),
     className: 'traffic-light-icon'
   });
 
   const createNumberIcon = (number) => {
     return new L.divIcon({
-      html: `<div style="background-color: rgba(255, 255, 255, 0.8); border-radius: 50%; border: 2px solid black; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold;">${number}</div>`,
+      html: `<div style="background-color: rgba(255, 255, 255, 0.8); border-radius: 30%; border: 2px solid black; width: 12px; height: 12px; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold;">${number}</div>`,
       className: '',  // No additional classes needed
       iconSize: [8, 1],
       iconAnchor: [4, 4]  // Centers the icon

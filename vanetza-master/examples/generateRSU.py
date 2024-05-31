@@ -25,10 +25,9 @@ def on_message(client, userdata, msg):
 
 
 def generate():
-    f = open('in_spatem.json')
+    f = open('my_in_spatem.json')
     m = json.load(f)
-    m["latitude"] = 0
-    m["longitude"] = 0
+    #m["intersections"]["states"]
     m = json.dumps(m)
     client.publish("vanetza/in/spatem",m)
     f.close()
@@ -37,8 +36,8 @@ def generate():
 client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 client.on_connect = on_connect
 client.on_message = on_message
-client.connect("192.168.98.10", 1883, 60)
-
+client.connect("192.168.98.100", 1883, 60)
+print("Connecting to")
 threading.Thread(target=client.loop_forever).start()
 
 while(True):

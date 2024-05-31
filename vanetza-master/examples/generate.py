@@ -1,4 +1,6 @@
 import json
+import time
+
 import paho.mqtt.client as mqtt
 import threading
 from time import sleep
@@ -20,6 +22,8 @@ print(type(intention))
 #intention = [0,1,2,11,12,13]
 dataset = 0
 first = True
+print("waiting 10 seconds for initialization ")
+time.sleep(20)
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
     client.subscribe("vanetza/out/cam")
@@ -159,7 +163,7 @@ def generate():
     f.close()
     sleep(TIME)
 
-client = mqtt.Client()
+client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 client.on_connect = on_connect
 client.on_message = on_message
 client.connect(os.getenv("OBU_MQTT_IP"), int(os.getenv("OBU_MQTT_PORT")), 60)

@@ -6,8 +6,9 @@ services:
             context: ./api
             dockerfile: Dockerfile
         depends_on:
-            - rsu
+            - rsu1
             - obu1
+            - obu2
         container_name: "api"
         ports:
             - "8080:8000"
@@ -31,10 +32,11 @@ services:
             vanetzalan0:
                 ipv4_address: 192.168.98.253
 
-    rsu:
-        hostname: rsu
+    rsu1:
+        hostname: rsu1
         restart: always
         image: code.nap.av.it.pt:5050/mobility-networks/vanetza:latest
+        container_name: "RSU1"
         cap_add:
             - "NET_ADMIN"
         environment:
@@ -44,16 +46,12 @@ services:
             - VANETZA_INTERFACE=br0
             - START_EMBEDDED_MOSQUITTO=true
             - SUPPORT_MAC_BLOCKING=true
-            - VANETZA_USE_HARDCODED_GPS=true
-            - VANETZA_LATITUDE=40.642678
-            - VANETZA_LONGITUDE=-8.648147
-            - VANETZA_CAM_PERIODICITY=0
+
         networks:
             vanetzalan0:
-                ipv4_address: 192.168.98.10
+                ipv4_address: 192.168.98.100
         volumes:
             - ./vanetza-master/tools/socktap/config.ini:/config.ini
-
 
     obu1:
         hostname: obu1
@@ -73,24 +71,24 @@ services:
             - VANETZA_CAM_PERIODICITY=0
         networks:
             vanetzalan0:
-                ipv4_address: 192.168.98.20
+                ipv4_address: 192.168.98.10
         volumes:
             - ./vanetza-master/tools/socktap/config.ini:/config.ini
 
     gen_obu1:
         build:
             context: ./vanetza-master/examples
-            dockerfile: Dockerfile
+            dockerfile: obu.Dockerfile
         depends_on:
             - obu1
         container_name: "gen_obu1"
         environment:
             - INTENT=[0,1,2,11,12,13]
-            - OBU_MQTT_IP=192.168.98.20
+            - OBU_MQTT_IP=192.168.98.10
             - OBU_MQTT_PORT=1883
         networks:
             vanetzalan0:
-                ipv4_address: 192.168.98.2
+                ipv4_address: 192.168.98.11
 
 
     obu2:
@@ -101,9 +99,9 @@ services:
         cap_add:
             - "NET_ADMIN"
         environment:
-            - VANETZA_STATION_ID=2
+            - VANETZA_STATION_ID=3
             - VANETZA_STATION_TYPE=5
-            - VANETZA_MAC_ADDRESS=6e:06:e0:03:00:02
+            - VANETZA_MAC_ADDRESS=6e:06:e0:03:00:03
             - VANETZA_INTERFACE=br0
             - START_EMBEDDED_MOSQUITTO=true
             - SUPPORT_MAC_BLOCKING=true
@@ -111,30 +109,39 @@ services:
             - VANETZA_CAM_PERIODICITY=0
         networks:
             vanetzalan0:
-                ipv4_address: 192.168.98.40
+                ipv4_address: 192.168.98.20
         volumes:
             - ./vanetza-master/tools/socktap/config.ini:/config.ini
 
     gen_obu2:
         build:
             context: ./vanetza-master/examples
-            dockerfile: Dockerfile
+            dockerfile: obu.Dockerfile
         depends_on:
             - obu2
         container_name: "gen_obu2"
         environment:
             - INTENT=[3,4,5,6,7,10,13]
-            - OBU_MQTT_IP=192.168.98.40
+            - OBU_MQTT_IP=192.168.98.20
             - OBU_MQTT_PORT=1883
         networks:
             vanetzalan0:
-                ipv4_address: 192.168.98.3
+                ipv4_address: 192.168.98.21
 
+    gen_rsu1:
+        build:
+            context: ./vanetza-master/examples
+            dockerfile: rsu.Dockerfile
+        depends_on:
+            - rsu1
+        container_name: "gen_rsu1"
+        environment:
+            - RSU_MQTT_IP=192.168.98.100
+            - RSU_MQTT_PORT=1883
+        networks:
+            vanetzalan0:
+                ipv4_address: 192.168.98.101
 
 networks:
   vanetzalan0:
     external: true
-
-# volumes:
-#   influxdb-data:volumes:
-#   influxdb-data:
