@@ -31,12 +31,15 @@ app = FastAPI(title="Notification API",
 obu_mqtt_brokers = [
     {"broker": "192.168.98.10", "port": 1883, "topic": "vanetza/in/cam"},
     {"broker": "192.168.98.20", "port": 1883, "topic": "vanetza/in/cam"},
+    #{"broker": "192.168.98.30", "port": 1883, "topic": "vanetza/in/cam"},
 
     # ...
 ]
 
 rsu_mqtt_brokers = [
     {"broker": "192.168.98.100", "port": 1883, "topic": "vanetza/in/spatem"},
+    {"broker": "192.168.98.110", "port": 1883, "topic": "vanetza/in/spatem"},
+
 ]
 
 
@@ -98,8 +101,13 @@ async def get_mqtt_data():
 async def get_mqtt_dataRSU():
 
     global RSUS
-    print(RSUS)
-    return RSUS
+    r = {}
+    ii = 0
+    for rsu in RSUS:
+        for ind in RSUS[rsu]:
+            r.update({(ind+(ii*4)) : RSUS[rsu][ind]})
+        ii+=1
+    return r
 
 for broker in obu_mqtt_brokers:
 

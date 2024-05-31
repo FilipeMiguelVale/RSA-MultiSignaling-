@@ -61,7 +61,8 @@ function MapComponent() {
         console.log("Fetched RSU Data:", rsuData); // Make sure the data is as expected
 
         const updatedTrafficLights = trafficLights.map((light, index) => {
-          const state = rsuData["1"][index]?.state || 3; // Default to '3' (red) if no state is found
+
+          const state = rsuData[index]?.state || 3; // Default to '3' (red) if no state is found
           console.log(`Updating light ${light.id} at index ${index} with state ${state}`); // Debugging
           return {
             ...light,

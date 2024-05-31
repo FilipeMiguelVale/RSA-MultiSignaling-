@@ -2,6 +2,7 @@ import json
 import paho.mqtt.client as mqtt
 import threading
 from time import sleep
+import os
 
 
 def on_connect(client, userdata, flags, rc, properties):
@@ -36,7 +37,8 @@ def generate():
 client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 client.on_connect = on_connect
 client.on_message = on_message
-client.connect("192.168.98.100", 1883, 60)
+client.connect(os.getenv("RSU_MQTT_IP"), int(os.getenv("RSU_MQTT_PORT")), 60)
+
 print("Connecting to")
 threading.Thread(target=client.loop_forever).start()
 

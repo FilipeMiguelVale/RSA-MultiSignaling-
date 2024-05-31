@@ -142,6 +142,42 @@ services:
             vanetzalan0:
                 ipv4_address: 192.168.98.101
 
+    rsu2:
+        hostname: rsu2
+        restart: always
+        image: code.nap.av.it.pt:5050/mobility-networks/vanetza:latest
+        container_name: "RSU2"
+        cap_add:
+            - "NET_ADMIN"
+        environment:
+            - VANETZA_STATION_ID=10
+            - VANETZA_STATION_TYPE=15
+            - VANETZA_MAC_ADDRESS=6e:06:e0:03:00:10
+            - VANETZA_INTERFACE=br0
+            - START_EMBEDDED_MOSQUITTO=true
+            - SUPPORT_MAC_BLOCKING=true
+
+        networks:
+            vanetzalan0:
+                ipv4_address: 192.168.98.110
+        volumes:
+            - ./vanetza-master/tools/socktap/config.ini:/config.ini
+
+
+    gen_rsu2:
+        build:
+            context: ./vanetza-master/examples
+            dockerfile: rsu.Dockerfile
+        depends_on:
+            - rsu1
+        container_name: "gen_rsu2"
+        environment:
+            - RSU_MQTT_IP=192.168.98.110
+            - RSU_MQTT_PORT=1883
+        networks:
+            vanetzalan0:
+                ipv4_address: 192.168.98.111
+
 networks:
   vanetzalan0:
     external: true
