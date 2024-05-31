@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function MapComponent() {
   const [carData, setCarData] = useState([]);
+  const [trafficLightData, setTrafficLightData] = useState([]);
 
   // Static traffic light positions
   const trafficLights = [
@@ -54,12 +55,22 @@ function MapComponent() {
         }));
         setCarData(carEntries);
 
-        // Fetch additional data from another endpoint
-        // const additionalResponse = await fetch('/dataRSU');
-        // const additionalData = await additionalResponse.json();
-        // // Process and update your state or combine it with existing data
-        // //...
-        // setCarData(prevData => [...prevData, ...additionalData]);
+        const trafficResponse = await fetch('/dataRSU');
+        const rsuData = await trafficResponse.json();
+        
+        console.log("Fetched RSU Data:", rsuData); // Make sure the data is as expected
+
+        const updatedTrafficLights = trafficLights.map((light, index) => {
+          const state = rsuData["1"][index]?.state || 3; // Default to '3' (red) if no state is found
+          console.log(`Updating light ${light.id} at index ${index} with state ${state}`); // Debugging
+          return {
+            ...light,
+            state
+          };
+        });
+
+      setTrafficLightData(updatedTrafficLights);
+  
       } catch (error) {
         console.error('Failed to fetch data:', error);
       }
@@ -72,15 +83,39 @@ function MapComponent() {
 
   const carIcon = new L.Icon({
     iconUrl: require('./icons/car.png'),
-    iconSize: new L.Point(20, 20),
+    iconSize: new L.Point(30, 30),
     className: 'car-icon'
   });
 
-  const trafficLightIcon = new L.Icon({
-    iconUrl: require('./icons/traffic-light.png'),
-    iconSize: new L.Point(30, 30),
-    className: 'traffic-light-icon'
-  });
+  // Define icons for each state of the traffic light
+  const trafficLightIcons = {
+    3: new L.Icon({
+      iconUrl: require('./icons/3.png'),
+      iconSize: new L.Point(30, 30),
+      className: 'traffic-light-icon'
+    }),
+    6: new L.Icon({
+      iconUrl: require('./icons/2.png'),
+      iconSize: new L.Point(30, 30),
+      className: 'traffic-light-icon'
+    }),
+    4: new L.Icon({
+      iconUrl: require('./icons/1.png'),
+      iconSize: new L.Point(30, 30),
+      className: 'traffic-light-icon'
+    }),
+    4: new L.Icon({
+      iconUrl: require('./icons/1.png'),
+      iconSize: new L.Point(30, 30),
+      className: 'traffic-light-icon'
+    })
+
+  };
+
+  const getTrafficLightIcon = (state) => {
+    console.log(`Selecting icon for state: ${state}`); // Debugging statement
+    return trafficLightIcons[state] || trafficLightIcons[2]; // Default to red if undefined
+  };
 
   const createNumberIcon = (number) => {
     return new L.divIcon({
@@ -103,10 +138,11 @@ function MapComponent() {
             </Popup>
           </Marker>
         ))}
-        {trafficLights.map(light => (
-          <Marker key={light.id} position={[light.latitude, light.longitude]} icon={trafficLightIcon}>
+       {trafficLightData.map(light => (
+          <Marker key={light.id} position={[light.latitude, light.longitude]} icon={getTrafficLightIcon(light.state)}>
             <Popup>
               Traffic Light ID: {light.id}
+              State: {light.state}
             </Popup>
           </Marker>
         ))}
