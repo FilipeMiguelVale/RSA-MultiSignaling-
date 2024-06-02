@@ -128,6 +128,43 @@ services:
             vanetzalan0:
                 ipv4_address: 192.168.98.21
 
+#    obu3:
+#        hostname: obu3
+#        container_name: "obu3"
+#        restart: always
+#        image: code.nap.av.it.pt:5050/mobility-networks/vanetza:latest
+#        cap_add:
+#            - "NET_ADMIN"
+#        environment:
+#            - VANETZA_STATION_ID=4
+#            - VANETZA_STATION_TYPE=5
+#            - VANETZA_MAC_ADDRESS=6e:06:e0:03:00:04
+#            - VANETZA_INTERFACE=br0
+#            - START_EMBEDDED_MOSQUITTO=true
+#            - SUPPORT_MAC_BLOCKING=true
+#            - VANETZA_USE_HARDCODED_GPS=true
+#            - VANETZA_CAM_PERIODICITY=0
+#        networks:
+#            vanetzalan0:
+#                ipv4_address: 192.168.98.30
+#        volumes:
+#            - ./vanetza-master/tools/socktap/config.ini:/config.ini
+#
+#    gen_obu3:
+#        build:
+#            context: ./vanetza-master/examples
+#            dockerfile: obu.Dockerfile
+#        depends_on:
+#            - obu3
+#        container_name: "gen_obu3"
+#        environment:
+#            - INTENT=[3,4,5,6,7,10,13]
+#            - OBU_MQTT_IP=192.168.98.30
+#            - OBU_MQTT_PORT=1883
+#        networks:
+#            vanetzalan0:
+#                ipv4_address: 192.168.98.31
+
     gen_rsu1:
         build:
             context: ./vanetza-master/examples

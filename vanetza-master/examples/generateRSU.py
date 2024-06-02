@@ -27,7 +27,7 @@ def alter_state():
             with open('my_in_spatem.json', 'r') as f:
                 m = json.load(f)
             
-            print("Original state: ", json.dumps(m, indent=4))
+            #print("Original state: ", json.dumps(m, indent=4))
             
             for state in m["intersections"][0]["states"]:
                 for sts in state["state-time-speed"]:
@@ -44,12 +44,12 @@ def alter_state():
                 json.dump(m, f, indent=4)
 
             message = json.dumps(m)
-            client.publish("vanetza/in/my_in_spatem", message)
+            client.publish("vanetza/in/spatem", message)
             print("Published updated state: ", message)
         except Exception as e:
             print("Error updating state: ", e)
 
-        sleep(5)
+        sleep(10)
 
 
 def generate():
@@ -73,11 +73,14 @@ client.connect(os.getenv("RSU_MQTT_IP"), int(os.getenv("RSU_MQTT_PORT")), 60)
 print("Connecting to MQTT broker...")
 
 # Start MQTT loop in a separate thread
-#threading.Thread(target=client.loop_forever).start()
+
+threading.Thread(target=client.loop_forever).start()
 
 # Start alter_state function in a separate thread
 threading.Thread(target=client.loop_forever).start()
 
 # Continuously generate and publish messages
 while True:
-    generate()
+    #generate()
+    alter_state()
+

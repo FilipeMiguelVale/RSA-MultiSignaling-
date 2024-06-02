@@ -58,23 +58,20 @@ def on_messageRSU(client, userdata, msg):
     # print(colored("CAM message", "green"))
     message = json.loads(msg.payload)
     rsu_MESSAGE = msg.payload
-    print("\n\n")
-    print(message)
-    print("\n\n")
 
     stationID = message["stationID"]
-    if(stationID not in RSUS):
-        r = {}
-        for i, group in enumerate(message["fields"]["spat"]["intersections"][0]["states"]):
-            r[i]={"state": group["state-time-speed"][0]["eventState"]}
-        RSUS[stationID] = r#message["fields"]["spat"]["intersections"][0]["states"][0]
-        return
-    else:
-        pass
+    #if(stationID not in RSUS):
+    r = {}
+    for i, group in enumerate(message["fields"]["spat"]["intersections"][0]["states"]):
+        r[i]={"state": group["state-time-speed"][0]["eventState"]}
+    RSUS[stationID] = r#message["fields"]["spat"]["intersections"][0]["states"][0]
+    return
+    #else:
+    #    pass
 
 def on_messageObu1(client, userdata, msg):
     global OBU_MESSAGE, OBUS
-    #print(colored("CAM message", "green"))
+
     message = json.loads(msg.payload)
     OBU_MESSAGE = msg.payload
     longitude = message["longitude"]
@@ -82,13 +79,8 @@ def on_messageObu1(client, userdata, msg):
     speed = message["speed"]
     obu_id = message["receiverID"]
 
-    if(obu_id not in OBUS):
-        OBUS[obu_id] = {"longitude": longitude, "latitude": latitude, "speed": speed}
-        return
-    else:
-        OBUS[obu_id]["longitude"] = longitude
-        OBUS[obu_id]["latitude"] = latitude
-        OBUS[obu_id]["speed"] = speed
+    OBUS[obu_id] = {"longitude": longitude, "latitude": latitude, "speed": speed}
+
 
 
 @app.get("/data", status_code=200)

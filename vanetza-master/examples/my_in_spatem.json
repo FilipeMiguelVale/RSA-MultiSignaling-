@@ -10,7 +10,7 @@
                     "signalGroup": 1,
                     "state-time-speed": [
                         {
-                            "eventState": 3,
+                            "eventState": 6,
                             "timing": {
                                 "minEndTime": 28372
                             }
