@@ -61,7 +61,7 @@ function MapComponent() {
         }));
         console.log(carEntries)
         setCarData(carEntries);
-      
+
       } catch (error) {
         console.error('Failed to fetch data:', error);
       }
@@ -96,9 +96,7 @@ useEffect(() => {
   
     }, []);
 
-    const interval = setInterval(fetchData, 500);
-    return () => clearInterval(interval);
-  }, []);
+
 
   const carIcon = new L.Icon({
     iconUrl: require('./icons/car.png'),
@@ -112,7 +110,8 @@ useEffect(() => {
     className: 'car-icon'
   });
 
-  // Define icons for each state of the traffic light
+  // Define icons for each state of t
+// traffic light
   const trafficLightIcons = {
     3: new L.Icon({
       iconUrl: require('./icons/3.png'),

@@ -75,10 +75,11 @@ def on_messageObu1(client, userdata, msg):
 
     message = json.loads(msg.payload)
     OBU_MESSAGE = msg.payload
+    print(OBU_MESSAGE)
     longitude = message["longitude"]
     latitude = message["latitude"]
     speed = message["speed"]
-    obu_id = message["receiverID"]
+    obu_id = message["stationID"]
 
     OBUS[obu_id] = {"longitude": longitude, "latitude": latitude, "speed": speed}
 

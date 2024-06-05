@@ -83,6 +83,7 @@ services:
             - obu1
         container_name: "gen_obu1"
         environment:
+            - VANETZA_STATION_ID=2
             - INTENT=[0,1,2,11,12,13]
             - OBU_MQTT_IP=192.168.98.10
             - OBU_MQTT_PORT=1883
@@ -121,6 +122,7 @@ services:
             - obu2
         container_name: "gen_obu2"
         environment:
+            - VANETZA_STATION_ID=3
             - INTENT=[3,4,5,6,7,10,13]
             - OBU_MQTT_IP=192.168.98.20
             - OBU_MQTT_PORT=1883
@@ -158,6 +160,7 @@ services:
             - obu3
         container_name: "gen_obu3"
         environment:
+            - VANETZA_STATION_ID=4
             - INTENT=[11,12,1,2]
             - OBU_MQTT_IP=192.168.98.30
             - OBU_MQTT_PORT=1883
@@ -195,6 +198,7 @@ services:
             - obu4
         container_name: "gen_obu4"
         environment:
+            - VANETZA_STATION_ID=5
             - INTENT=[8,9,4,5]
             - OBU_MQTT_IP=192.168.98.40
             - OBU_MQTT_PORT=1883
