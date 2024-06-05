@@ -24,21 +24,21 @@ function MapComponent() {
 
   const numberPositions = [
     { id: 'n1', position: [40.642558, -8.648344], number: '0' },
-    { id: 'n1', position: [40.642502, -8.648184], number: '1' },
-    { id: 'n1', position: [40.642536, -8.648020], number: '2' },
-    { id: 'n1', position: [40.642671, -8.647877], number: '3' },
-    { id: 'n1', position: [40.642835, -8.646730], number: '3' },
-    { id: 'n1', position: [40.642810, -8.646621], number: '4' },
-    { id: 'n1', position: [40.642833, -8.646517], number: '5' },
-    { id: 'n1', position: [40.642938, -8.646439], number: '6' },
-    { id: 'n1', position: [40.643159, -8.646472], number: '7' },
-    { id: 'n1', position: [40.643280, -8.646697], number: '8' },
-    { id: 'n1', position: [40.643301, -8.646769], number: '9' },
-    { id: 'n1', position: [40.643076, -8.646816], number: '10' },
-    { id: 'n1', position: [40.642846, -8.648004], number: '10' },
-    { id: 'n1', position: [40.642960, -8.648177], number: '11' },
-    { id: 'n1', position: [40.642927, -8.648340], number: '12' },
-    { id: 'n1', position: [40.642773, -8.648412], number: '13' },
+    { id: 'n2', position: [40.642502, -8.648184], number: '1' },
+    { id: 'n3', position: [40.642536, -8.648020], number: '2' },
+    { id: 'n4', position: [40.642671, -8.647877], number: '3' },
+    { id: 'n5', position: [40.642835, -8.646730], number: '3' },
+    { id: 'n6', position: [40.642810, -8.646621], number: '4' },
+    { id: 'n7', position: [40.642833, -8.646517], number: '5' },
+    { id: 'n8', position: [40.642938, -8.646439], number: '6' },
+    { id: 'n9', position: [40.643159, -8.646472], number: '7' },
+    { id: 'n10', position: [40.643280, -8.646697], number: '8' },
+    { id: 'n11', position: [40.643301, -8.646769], number: '9' },
+    { id: 'n12', position: [40.643076, -8.646816], number: '10' },
+    { id: 'n13', position: [40.642846, -8.648004], number: '10' },
+    { id: 'n14', position: [40.642960, -8.648177], number: '11' },
+    { id: 'n15', position: [40.642927, -8.648340], number: '12' },
+    { id: 'n16', position: [40.642773, -8.648412], number: '13' },
     //{ id: 'n2', latitude: 40.642850, longitude: -8.648600, number: '2' },
     // Additional numbers...
   ];
@@ -49,21 +49,24 @@ function MapComponent() {
         // Fetch data from the original endpoint
         const response = await fetch('/data');
         const data = await response.json();
+        
         const carEntries = Object.keys(data).map(key => ({
-          id: key,
+
+          id: key*10,
           ...data[key]
         }));
+        console.log(carEntries)
         setCarData(carEntries);
 
         const trafficResponse = await fetch('/dataRSU');
         const rsuData = await trafficResponse.json();
         
-        console.log("Fetched RSU Data:", rsuData); // Make sure the data is as expected
+        //console.log("Fetched RSU Data:", rsuData); // Make sure the data is as expected
 
         const updatedTrafficLights = trafficLights.map((light, index) => {
 
           const state = rsuData[index]?.state || 3; // Default to '3' (red) if no state is found
-          console.log(`Updating light ${light.id} at index ${index} with state ${state}`); // Debugging
+         // console.log(`Updating light ${light.id} at index ${index} with state ${state}`); // Debugging
           return {
             ...light,
             state
@@ -77,7 +80,7 @@ function MapComponent() {
       }
     };
 
-    const interval = setInterval(fetchData, 500);
+    const interval = setInterval(fetchData, 1000);
     return () => clearInterval(interval);
   }, []);
 
@@ -114,7 +117,7 @@ function MapComponent() {
   };
 
   const getTrafficLightIcon = (state) => {
-    console.log(`Selecting icon for state: ${state}`); // Debugging statement
+    //console.log(`Selecting icon for state: ${state}`); // Debugging statement
     return trafficLightIcons[state] || trafficLightIcons[2]; // Default to red if undefined
   };
 
