@@ -5,10 +5,15 @@ import './MapComponent.css';
 import L from 'leaflet';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Toggle from 'react-toggle'
+import "react-toggle/style.css" // for ES6 modules
 
 function MapComponent() {
   const [carData, setCarData] = useState([]);
   const [trafficLightData, setTrafficLightData] = useState([]);
+  const [showAmbulance, setShowAmbulance] = useState(false); // Initialized to false
+  const [ambulancePosition, setAmbulancePosition] = useState([40.641939, -8.651645]);
+
 
   // Static traffic light positions
   const trafficLights = [
@@ -46,7 +51,6 @@ function MapComponent() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch data from the original endpoint
         const response = await fetch('/data');
         const data = await response.json();
         
@@ -57,36 +61,53 @@ function MapComponent() {
         }));
         console.log(carEntries)
         setCarData(carEntries);
-
-        const trafficResponse = await fetch('/dataRSU');
-        const rsuData = await trafficResponse.json();
-        
-        //console.log("Fetched RSU Data:", rsuData); // Make sure the data is as expected
-
-        const updatedTrafficLights = trafficLights.map((light, index) => {
-
-          const state = rsuData[index]?.state || 3; // Default to '3' (red) if no state is found
-         // console.log(`Updating light ${light.id} at index ${index} with state ${state}`); // Debugging
-          return {
-            ...light,
-            state
-          };
-        });
-
-      setTrafficLightData(updatedTrafficLights);
-  
+      
       } catch (error) {
         console.error('Failed to fetch data:', error);
       }
     };
 
-    const interval = setInterval(fetchData, 1000);
+    fetchData(); // Fetch on mount
+    const interval = setInterval(fetchData, 500);
     return () => clearInterval(interval);
   }, []);
 
+useEffect(() => {
+  const fetchData = async () => {
+    try{
+        const trafficResponse = await fetch('/dataRSU');
+        const rsuData = await trafficResponse.json();
+        const updatedTrafficLights = trafficLights.map((light, index) => {
+          const state = rsuData[index]?.state || 3; // Default to '3' (red) if no state is found
+          return {
+            ...light,
+            state
+          };
+        });
+    setTrafficLightData(updatedTrafficLights);
+    } catch (error) {
+      console.error('Failed to fetch data:', error);
+    }
+  };
+
+        fetchData(); // Fetch on mount
+        const interval = setInterval(fetchData, 500);
+        return () => clearInterval(interval);
+  
+    }, []);
+
+    const interval = setInterval(fetchData, 500);
+    return () => clearInterval(interval);
+  }, []);
 
   const carIcon = new L.Icon({
     iconUrl: require('./icons/car.png'),
+    iconSize: new L.Point(30, 30),
+    className: 'car-icon'
+  });
+
+  const ambulanceIcon = new L.Icon({
+    iconUrl: require('./icons/ambulance.png'),
     iconSize: new L.Point(30, 30),
     className: 'car-icon'
   });
@@ -130,10 +151,21 @@ function MapComponent() {
     });
   };
 
+  const toggleAmbulance = () => {
+    setShowAmbulance(!showAmbulance);
+  };
+
   return (
     <div className='container'>
-      <MapContainer center={[40.64264002592938, -8.648293544440508]} zoom={70} style={{ height: "100%", width: "100%"}} scrollWheelZoom={true}>
-        <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png" />
+      <label className="toggle">
+       <Toggle
+            checked={showAmbulance} // Ensure controlled component
+            onChange={toggleAmbulance} />
+          <span style={{marginLeft: '10px'}}>Emergency vehicle</span>
+      </label>
+      <MapContainer center={[40.64264002592938, -8.648293544440508]} zoom={20} style={{ height: "100%", width: "100%"}} scrollWheelZoom={true}>
+      <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png" maxZoom={19}/>
+
         {carData.map(car => (
           <Marker key={car.id} position={[car.latitude, car.longitude]} icon={carIcon}>
             <Popup>
@@ -157,6 +189,11 @@ function MapComponent() {
             </Popup>
           </Marker>
         ))}
+        {showAmbulance && (
+          <Marker position={ambulancePosition} icon={ambulanceIcon}>
+            <Popup>Ambulance is here</Popup>
+          </Marker>
+        )}
       </MapContainer>
       <ToastContainer newestOnTop />
     </div>
