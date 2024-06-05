@@ -1,7 +1,7 @@
 {
     "accEngaged": true,
     "acceleration": 0,
-    "altitude": 800001,
+    "altitude": 10,
     "altitudeConf": 15,
     "brakePedal": true,
     "collisionWarning": true,

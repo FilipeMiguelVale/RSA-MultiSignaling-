@@ -12,8 +12,7 @@ roads = [[(40.64196130815548, -8.651599817893402), (40.64197241724041, -8.651542
 group_ids_to_roads= [1,-1,2,0,-1,1,-1,2,-1,3,3,-1,0,-1]
 rsu_id_to_roads=    [1,-1,1,10,-1,1,-1,10,-1,10,10,-1,1,-1]
 
-current_pos = None
-final_pos = None
+
 speed = 60/3.6  #km /3.6 = m/s
 TIME = 0.4 #seconds
 current_bearing = 0
@@ -51,6 +50,8 @@ def on_message(client, userdata, msg):
     message = json.loads(msg.payload)
 
     if msg.topic == "vanetza/out/spatem":
+        global RSUS
+        print(message)
         stationID = message["stationID"]
         #if (stationID not in RSUS):
         r = {}
@@ -64,54 +65,36 @@ def on_message(client, userdata, msg):
 def get_message(data):
     f = open('my_in_cam.json')
     m = json.load(f)
-    global current_pos, final_pos, index, dataset, roads, RSUS, rsu_id, group_id, rsu_id
+    global index, dataset, roads, RSUS, rsu_id, group_id
     # todo: Calculate my groupId
     m["latitude"] = data[index][0]
     m["longitude"] = data[index][1]
-    #print(m)
     index += 1
-    #print(RSUS)
+
     if index >= len(data):
-        print("Dataset")
-        print(dataset)
-        print("RSUS")
-        print(RSUS)
-        print("group_id[dataset]")
-        print(group_id[dataset])
-        print("rsu_id")
-        print(rsu_id)
-        print(rsu_id[dataset])
 
         if group_id[dataset] == -1 or RSUS[rsu_id[dataset]][group_id[dataset]]['state'] == 6 :
             index = 0
             dataset += 1
         else:
-            print("\n\n está vermelhoooooo \n\n")
+            if RSUS[rsu_id[dataset]][group_id[dataset]]['state'] == 3:
+                print("\n\n está vermelhoooooo \n\n")
             index-=1
-    print(index)
+
     if dataset > len(intention) - 1:
         dataset = 0
 
     return m
 
 def generate():
-    #f = open('in_spatem.json')
-    f = open('my_in_cam.json')
-    m = json.load(f)
-    global current_pos, final_pos, index, dataset, roads
-    #next_latitude, next_longitude = next_position(current_pos, final_pos, TIME)
-    #current_pos = (next_latitude, next_longitude)
-    #m["latitude"] = next_latitude
-    #m["longitude"] = next_longitude
-
+    global dataset, roads, intention
 
     m = get_message(roads[intention[dataset]])
 
     m["speed"] = speed*3.6
     m = json.dumps(m)
-    print(m)
+    #print(m)
     client.publish("vanetza/in/cam",m)
-    f.close()
     sleep(TIME)
 
 client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
