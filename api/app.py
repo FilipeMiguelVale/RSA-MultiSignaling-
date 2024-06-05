@@ -31,7 +31,8 @@ app = FastAPI(title="Notification API",
 obu_mqtt_brokers = [
     {"broker": "192.168.98.10", "port": 1883, "topic": "vanetza/in/cam"},
     {"broker": "192.168.98.20", "port": 1883, "topic": "vanetza/in/cam"},
-    #{"broker": "192.168.98.30", "port": 1883, "topic": "vanetza/in/cam"},
+    {"broker": "192.168.98.30", "port": 1883, "topic": "vanetza/in/cam"},
+    {"broker": "192.168.98.40", "port": 1883, "topic": "vanetza/in/cam"},
 
     # ...
 ]

@@ -83,7 +83,7 @@ def get_message(data):
 
     if dataset > len(intention) - 1:
         dataset = 0
-
+    f.close()
     return m
 
 def generate():
@@ -93,7 +93,7 @@ def generate():
 
     m["speed"] = speed*3.6
     m = json.dumps(m)
-    #print(m)
+    print(m)
     client.publish("vanetza/in/cam",m)
     sleep(TIME)
 
