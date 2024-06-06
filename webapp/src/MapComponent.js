@@ -21,10 +21,10 @@ function MapComponent() {
     { id: 'tl2', latitude: 40.642643, longitude: -8.648292 },
     { id: 'tl3', latitude: 40.642554, longitude: -8.648119 },
     { id: 'tl4', latitude: 40.642714, longitude: -8.647976 },
-    { id: 'tl8', latitude: 40.643103, longitude: -8.646651 },
     { id: 'tl5', latitude: 40.642955, longitude: -8.646786 },
     { id: 'tl6', latitude: 40.642865, longitude: -8.646602 },
     { id: 'tl7', latitude: 40.643022, longitude: -8.646451 },
+    { id: 'tl8', latitude: 40.643103, longitude: -8.646651 }
   ];
 
   const numberPositions = [
