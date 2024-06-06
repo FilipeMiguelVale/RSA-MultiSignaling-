@@ -156,12 +156,12 @@ useEffect(() => {
 
   return (
     <div className='container'>
-      <label className="toggle">
-       <Toggle
-            checked={showAmbulance} // Ensure controlled component
-            onChange={toggleAmbulance} />
-          <span style={{marginLeft: '10px'}}>Emergency vehicle</span>
-      </label>
+      {/*<label className="toggle">*/}
+      {/* <Toggle*/}
+      {/*      checked={showAmbulance} // Ensure controlled component*/}
+      {/*      onChange={toggleAmbulance} />*/}
+      {/*    <span style={{marginLeft: '10px'}}>Emergency vehicle</span>*/}
+      {/*</label>*/}
       <MapContainer center={[40.64264002592938, -8.648293544440508]} zoom={20} style={{ height: "100%", width: "100%"}} scrollWheelZoom={true}>
       <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png" maxZoom={19}/>
 
