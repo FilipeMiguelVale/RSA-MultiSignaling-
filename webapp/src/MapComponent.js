@@ -21,10 +21,10 @@ function MapComponent() {
     { id: 'tl2', latitude: 40.642643, longitude: -8.648292 },
     { id: 'tl3', latitude: 40.642554, longitude: -8.648119 },
     { id: 'tl4', latitude: 40.642714, longitude: -8.647976 },
+    { id: 'tl8', latitude: 40.643103, longitude: -8.646651 },
     { id: 'tl5', latitude: 40.642955, longitude: -8.646786 },
     { id: 'tl6', latitude: 40.642865, longitude: -8.646602 },
     { id: 'tl7', latitude: 40.643022, longitude: -8.646451 },
-    { id: 'tl8', latitude: 40.643103, longitude: -8.646651 }
   ];
 
   const numberPositions = [
@@ -156,12 +156,12 @@ useEffect(() => {
 
   return (
     <div className='container'>
-      <label className="toggle">
-       <Toggle
-            checked={showAmbulance} // Ensure controlled component
-            onChange={toggleAmbulance} />
-          <span style={{marginLeft: '10px'}}>Emergency vehicle</span>
-      </label>
+      {/*<label className="toggle">*/}
+      {/* <Toggle*/}
+      {/*      checked={showAmbulance} // Ensure controlled component*/}
+      {/*      onChange={toggleAmbulance} />*/}
+      {/*    <span style={{marginLeft: '10px'}}>Emergency vehicle</span>*/}
+      {/*</label>*/}
       <MapContainer center={[40.64264002592938, -8.648293544440508]} zoom={20} style={{ height: "100%", width: "100%"}} scrollWheelZoom={true}>
       <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png" maxZoom={19}/>
 
