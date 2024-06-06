@@ -101,10 +101,6 @@ async def get_mqtt_dataRSU():
         for ind in RSUS[rsu]:
             r.update({(ind+(ii*4)) : RSUS[rsu][ind]})
         ii+=1
-        for ind in RSUS[rsu]:
-            r.update({(ind+(ii*4)) : RSUS[rsu][ind]})
-        ii+=1
-        pass
     return r
 
 for broker in obu_mqtt_brokers:
