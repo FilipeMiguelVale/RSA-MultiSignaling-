@@ -104,6 +104,51 @@ useEffect(() => {
     className: 'car-icon'
   });
 
+  const CarIcons = {
+    20: new L.Icon({
+      iconUrl: require('./icons/green.png'),
+      iconSize: new L.Point(30, 30),
+      className: 'traffic-light-icon'
+    }),
+    30: new L.Icon({
+      iconUrl: require('./icons/red.png'),
+      iconSize: new L.Point(30, 30),
+      className: 'traffic-light-icon'
+    }),
+    40: new L.Icon({
+      iconUrl: require('./icons/yellow.png'),
+      iconSize: new L.Point(30, 30),
+      className: 'traffic-light-icon'
+    }),
+    50: new L.Icon({
+      iconUrl: require('./icons/taxi.png'),
+      iconSize: new L.Point(30, 30),
+      className: 'traffic-light-icon'
+    }),
+    60: new L.Icon({
+      iconUrl: require('./icons/truck.png'),
+      iconSize: new L.Point(30, 30),
+      className: 'traffic-light-icon'
+    }),
+    70: new L.Icon({
+      iconUrl: require('./icons/delivery.png'),
+      iconSize: new L.Point(30, 30),
+      className: 'traffic-light-icon'
+    }),
+    80: new L.Icon({
+      iconUrl: require('./icons/bicycle.png'),
+      iconSize: new L.Point(30, 30),
+      className: 'traffic-light-icon'
+    }),
+    90: new L.Icon({
+      iconUrl: require('./icons/school-bus.png'),
+      iconSize: new L.Point(30, 30),
+      className: 'traffic-light-icon'
+    })
+
+  };
+
+
   const ambulanceIcon = new L.Icon({
     iconUrl: require('./icons/ambulance.png'),
     iconSize: new L.Point(30, 30),
@@ -141,6 +186,15 @@ useEffect(() => {
     return trafficLightIcons[state] || trafficLightIcons[2]; // Default to red if undefined
   };
 
+
+  //Function to change the car icon according to the id of the car
+  const getCarIcon = (id) => {
+    //debugging statement
+    console.log(`Selecting icon for id: ${id}`);
+    return CarIcons[id] || carIcon; // Default to red if undefine
+  };
+
+
   const createNumberIcon = (number) => {
     return new L.divIcon({
       html: `<div style="background-color: rgba(255, 255, 255, 0.8); border-radius: 30%; border: 2px solid black; width: 12px; height: 12px; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold;">${number}</div>`,
@@ -166,7 +220,7 @@ useEffect(() => {
       <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png" maxZoom={19}/>
 
         {carData.map(car => (
-          <Marker key={car.id} position={[car.latitude, car.longitude]} icon={carIcon}>
+          <Marker key={car.id} position={[car.latitude, car.longitude]} icon={getCarIcon(car.id)}>
             <Popup>
               Speed: {car.speed} km/h
               ID: {car.id}

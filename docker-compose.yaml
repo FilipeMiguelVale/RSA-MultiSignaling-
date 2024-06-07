@@ -282,6 +282,82 @@ services:
             vanetzalan0:
                 ipv4_address: 192.168.98.61
 
+    obu7:
+        hostname: obu7
+        container_name: "obu7"
+        restart: always
+        image: code.nap.av.it.pt:5050/mobility-networks/vanetza:latest
+        cap_add:
+            - "NET_ADMIN"
+        environment:
+            - VANETZA_STATION_ID=8
+            - VANETZA_STATION_TYPE=5
+            - VANETZA_MAC_ADDRESS=6e:06:e0:03:00:07
+            - VANETZA_INTERFACE=br0
+            - START_EMBEDDED_MOSQUITTO=true
+            - SUPPORT_MAC_BLOCKING=true
+            - VANETZA_USE_HARDCODED_GPS=true
+            - VANETZA_CAM_PERIODICITY=0
+        networks:
+            vanetzalan0:
+                ipv4_address: 192.168.98.70
+        volumes:
+            - ./vanetza-master/tools/socktap/config.ini:/config.ini
+
+    gen_obu7:
+        build:
+            context: ./vanetza-master/examples
+            dockerfile: obu.Dockerfile
+        depends_on:
+            - obu7
+        container_name: "gen_obu7"
+        environment:
+            - VANETZA_STATION_ID=8
+            - INTENT=[11,12,3,8]
+            - OBU_MQTT_IP=192.168.98.70
+            - OBU_MQTT_PORT=1883
+        networks:
+            vanetzalan0:
+                ipv4_address: 192.168.98.71
+
+    obu8:
+        hostname: obu8
+        container_name: "obu8"
+        restart: always
+        image: code.nap.av.it.pt:5050/mobility-networks/vanetza:latest
+        cap_add:
+            - "NET_ADMIN"
+        environment:
+            - VANETZA_STATION_ID=9
+            - VANETZA_STATION_TYPE=5
+            - VANETZA_MAC_ADDRESS=6e:06:e0:03:00:08
+            - VANETZA_INTERFACE=br0
+            - START_EMBEDDED_MOSQUITTO=true
+            - SUPPORT_MAC_BLOCKING=true
+            - VANETZA_USE_HARDCODED_GPS=true
+            - VANETZA_CAM_PERIODICITY=0
+        networks:
+            vanetzalan0:
+                ipv4_address: 192.168.98.80
+        volumes:
+            - ./vanetza-master/tools/socktap/config.ini:/config.ini
+
+    gen_obu8:
+        build:
+            context: ./vanetza-master/examples
+            dockerfile: obu.Dockerfile
+        depends_on:
+            - obu8
+        container_name: "gen_obu8"
+        environment:
+            - VANETZA_STATION_ID=9
+            - INTENT=[4,10,13,0,1,3]
+            - OBU_MQTT_IP=192.168.98.80
+            - OBU_MQTT_PORT=1883
+        networks:
+            vanetzalan0:
+                ipv4_address: 192.168.98.81
+
     gen_rsu1:
         build:
             context: ./vanetza-master/examples
