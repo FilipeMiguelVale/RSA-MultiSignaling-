@@ -1,7 +1,0 @@
-struct MQTTMessage
-{
-    unsigned long uuid;
-    unsigned long datetime;
-    string topic;
-    string message;
-};
